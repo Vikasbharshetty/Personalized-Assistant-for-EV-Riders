@@ -1,0 +1,169 @@
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import LoadingScreen from './src/screens/LoadingScreen';
+import OnboardingSlider from './src/screens/OnboardingSlider';
+import GetStartedScreen from './src/screens/GetStartedScreen';
+import PhoneNumberInputScreen from './src/screens/PhoneNumberInputScreen';
+import OTPVerificationScreen from './src/screens/OTPVerificationScreen';
+import ProfileCompletionScreen from './src/screens/ProfileCompletionScreen';
+import MainAppScreen from './src/screens/MainAppScreen';
+
+export default function App() {
+  const [currentScreen, setCurrentScreen] = useState('loading'); // 'loading', 'onboarding', 'getstarted', 'phone', 'otp', 'profile', 'main'
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
+
+  const handleLoadingComplete = () => {
+    setCurrentScreen('onboarding');
+  };
+
+  const handleOnboardingComplete = () => {
+    setCurrentScreen('getstarted');
+  };
+
+  const handleGetStartedComplete = () => {
+    setCurrentScreen('main');
+  };
+
+  const handleGoogleLogin = () => {
+    // Handle Google login logic here
+    console.log('Google login pressed');
+    setCurrentScreen('main');
+  };
+
+  const handleFacebookLogin = () => {
+    // Handle Facebook login logic here
+    console.log('Facebook login pressed');
+    setCurrentScreen('main');
+  };
+
+  const handleAppleLogin = () => {
+    // Handle Apple login logic here
+    console.log('Apple login pressed');
+    setCurrentScreen('main');
+  };
+
+  const handlePhoneLogin = () => {
+    // Navigate to phone number input screen
+    console.log('Phone login pressed');
+    setCurrentScreen('phone');
+  };
+
+  const handleSignUp = () => {
+    // Handle sign up logic here
+    console.log('Sign up pressed');
+    setCurrentScreen('main');
+  };
+
+  const handlePhoneNumberSubmit = (phone) => {
+    setPhoneNumber(phone);
+    setCurrentScreen('otp');
+  };
+
+  const handleOTPVerify = (otpCode) => {
+    console.log('OTP verified:', otpCode);
+    // Here you would typically verify the OTP with your backend
+    setCurrentScreen('profile');
+  };
+
+  const handleProfileComplete = (profile) => {
+    setUserProfile(profile);
+    console.log('Profile completed:', profile);
+    setCurrentScreen('main');
+  };
+
+  const handleBackToGetStarted = () => {
+    setCurrentScreen('getstarted');
+  };
+
+  const handleBackToPhone = () => {
+    setCurrentScreen('phone');
+  };
+
+  const handleBackToOTP = () => {
+    setCurrentScreen('otp');
+  };
+
+  const handleResendOTP = () => {
+    console.log('Resending OTP to:', phoneNumber);
+    // Here you would typically resend the OTP
+  };
+
+  if (currentScreen === 'loading') {
+    return (
+      <>
+        <LoadingScreen onLoadingComplete={handleLoadingComplete} />
+        <StatusBar style="dark" />
+      </>
+    );
+  }
+
+  if (currentScreen === 'onboarding') {
+    return (
+      <>
+        <OnboardingSlider onComplete={handleOnboardingComplete} />
+        <StatusBar style="light" />
+      </>
+    );
+  }
+
+  if (currentScreen === 'getstarted') {
+    return (
+      <>
+        <GetStartedScreen 
+          onGoogleLogin={handleGoogleLogin}
+          onFacebookLogin={handleFacebookLogin}
+          onAppleLogin={handleAppleLogin}
+          onPhoneLogin={handlePhoneLogin}
+          onSignUp={handleSignUp}
+        />
+        <StatusBar style="dark" />
+      </>
+    );
+  }
+
+  if (currentScreen === 'phone') {
+    return (
+      <>
+        <PhoneNumberInputScreen 
+          onContinue={handlePhoneNumberSubmit}
+          onBack={handleBackToGetStarted}
+        />
+        <StatusBar style="dark" />
+      </>
+    );
+  }
+
+  if (currentScreen === 'otp') {
+    return (
+      <>
+        <OTPVerificationScreen 
+          phoneNumber={phoneNumber}
+          onVerify={handleOTPVerify}
+          onBack={handleBackToPhone}
+          onResendOTP={handleResendOTP}
+        />
+        <StatusBar style="dark" />
+      </>
+    );
+  }
+
+  if (currentScreen === 'profile') {
+    return (
+      <>
+        <ProfileCompletionScreen 
+          onContinue={handleProfileComplete}
+          onBack={handleBackToOTP}
+        />
+        <StatusBar style="dark" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <MainAppScreen />
+      <StatusBar style="dark" />
+    </>
+  );
+}
